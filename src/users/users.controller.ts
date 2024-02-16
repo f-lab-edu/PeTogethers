@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -9,7 +9,7 @@ export class UsersController {
     // /users 회원가입
     @Post()
     @HttpCode(201)
-    async createUser(@Body() dto: CreateUserDto): Promise<{ status: number, message: string}> {
+    async createUser(@Body(ValidationPipe) dto: CreateUserDto): Promise<{ status: number, message: string}> {
 
         await this.userService.createUser(dto)
 

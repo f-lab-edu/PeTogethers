@@ -1,18 +1,20 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CreateUserCommand } from './create-user.command';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export class UsersService {
+@CommandHandler(CreateUserCommand)
+export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     constructor(
         @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>
     ) {}
 
-    async createUser(dto: CreateUserDto): Promise<void> {
-        const { email, password, name, nickname, birthday, address} = dto;
+    async execute(command: CreateUserCommand) {
+        const { email, password, name, nickname, birthday, address} = command;
 
         const userExist = await this.checkUserExists(email);
 

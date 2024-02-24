@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import authConfig from './config/authConfig';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           ? './src/config/env/.production.env'
         : process.env.NODE_ENV === 'stage'
         ? './src/config/env/.stage.env'
-        : './src/config/env/.development.env'
+        : './src/config/env/.development.env',
+      load: [authConfig],
+      isGlobal: true
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -25,7 +29,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true'
     }),
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

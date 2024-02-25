@@ -21,7 +21,7 @@ export class AuthService {
 
         return jwt.sign(payload, this.config.jwtSecret, {
             expiresIn: '1d',
-            audience: 'leekc.com',
+            audience: 'leekc.com', 
             issuer: 'leekc.com',
         });
     }
